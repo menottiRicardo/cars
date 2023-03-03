@@ -3,6 +3,7 @@ import Head from "next/head";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { api } from "~/utils/api";
 import ImageCarousel from "~/components/ImageCarousel";
+import CarCard from "~/components/CarCard";
 
 const Home: NextPage = () => {
   const hello = api.example.hello.useQuery({ text: "from tRPC" });
@@ -16,7 +17,13 @@ const Home: NextPage = () => {
       </Head>
       <main className="min-h-screen bg-base-100">
         Inicio
-        <ImageCarousel />
+        <div className="grid gap-y-4">
+          <CarCard />
+          <CarCard />
+
+          <CarCard />
+          <CarCard />
+        </div>
       </main>
     </>
   );

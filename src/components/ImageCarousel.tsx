@@ -25,10 +25,10 @@ const ImageCarousel = () => {
     setCurrentIndex(slideIndex);
   };
   return (
-    <div className="group relative m-auto h-96 w-full max-w-[1400px] py-16 px-4">
+    <div className="group relative m-auto h-48 w-full max-w-[1400px]">
       <div
         style={{ backgroundImage: `url(${slides[currentIndex]})` }}
-        className="h-full w-full rounded-2xl bg-cover bg-center duration-100"
+        className="h-full w-full rounded-t-xl bg-cover bg-center duration-100"
       ></div>
       {/* Left Arrow */}
       <div className="absolute top-[50%] left-5 hidden -translate-x-0 translate-y-[-50%] cursor-pointer rounded-full bg-black/20 p-2 text-2xl text-white group-hover:block">
