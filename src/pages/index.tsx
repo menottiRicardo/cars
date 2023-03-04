@@ -18,10 +18,10 @@ const Home: NextPage = () => {
       <main className="min-h-screen bg-base-100 pb-20">
         <div className="grid gap-y-4">
           <CarCard />
-          {/* <CarCard />
+          <CarCard />
 
           <CarCard />
-          <CarCard /> */}
+          <CarCard />
         </div>
       </main>
     </>
