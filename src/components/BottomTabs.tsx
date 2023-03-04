@@ -11,7 +11,7 @@ const BottomTabs = () => {
   const router = useRouter();
   const pathname = router.pathname;
   return (
-    <div className="btm-nav">
+    <div className="btm-nav bg-base-100 z-50">
       <Link href={"/"} className={`${pathname === "/" ? "active text-primary-focus" : ""}`}>
         <HomeIcon className="w-6" />
         <span className="btm-nav-label">Inicio</span>

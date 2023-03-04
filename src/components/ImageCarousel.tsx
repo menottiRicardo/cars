@@ -27,6 +27,7 @@ const ImageCarousel = () => {
     preventScrollOnSwipe: true,
     trackMouse: true,
   });
+  console.log(state.pos)
   return (
     <div className="group relative h-48 w-full overflow-hidden" {...handlers}>
       <div
@@ -47,10 +48,10 @@ const ImageCarousel = () => {
           </>
         ))}
       </div>
-      <div className="absolute inset-x-0 bottom-2 z-50 flex h-2 w-full items-center justify-center gap-x-2">
+      <div className="absolute inset-x-0 bottom-2 z-20 flex h-2 w-full items-center justify-center gap-x-2">
         {slides.map((slide, index) => {
           const order = getOrder(index, state.pos, slides.length);
-          console.log(state.pos);
+         
           return (
             <div
               key={index}
@@ -121,7 +122,7 @@ const getOrder = (index: number, pos: number, numItems: number) => {
 };
 
 const getInitialState = (numItems: number): CarouselState => ({
-  pos: numItems - 1,
+  pos: 0,
   sliding: false,
   dir: "NEXT",
 });
