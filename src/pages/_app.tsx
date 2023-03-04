@@ -5,8 +5,6 @@ import { SessionProvider } from "next-auth/react";
 import { api } from "~/utils/api";
 
 import "~/styles/globals.css";
-import NavBar from "~/components/NavBar";
-import BottomTabs from "~/components/BottomTabs";
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
@@ -14,11 +12,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
 }) => {
   return (
     <SessionProvider session={session}>
-      <NavBar />
-      <main className="layout-1 mt-4">
-        <Component {...pageProps} />
-      </main>
-      <BottomTabs />
+      <Component {...pageProps} />
     </SessionProvider>
   );
 };

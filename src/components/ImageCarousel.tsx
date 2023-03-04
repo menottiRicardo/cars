@@ -1,14 +1,10 @@
-import {
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  MinusIcon,
-} from "@heroicons/react/24/outline";
-import React, { useState } from "react";
+import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
+import { useReducer } from "react";
 import { useSwipeable } from "react-swipeable";
 
 const slides = ["/car-2.jpg", "/car-1.jpg", "/car-3.jpg"];
 const ImageCarousel = () => {
-  const [state, dispatch] = React.useReducer(
+  const [state, dispatch] = useReducer(
     reducer,
     getInitialState(slides.length)
   );

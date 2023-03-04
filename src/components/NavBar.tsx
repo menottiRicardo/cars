@@ -2,13 +2,12 @@ import {
   AdjustmentsVerticalIcon,
   MagnifyingGlassIcon,
 } from "@heroicons/react/24/outline";
-import React from "react";
 
 const NavBar = () => {
   return (
-    <div className="navbar sticky top-0 shadow-2xl z-50 bg-base-100">
+    <div className="navbar sticky top-0 z-50 bg-base-100 shadow-2xl">
       <div className="flex-1">
-        <a className="btn-ghost btn text-xl normal-case">Cars</a>
+        <a className="btn-ghost btn text-xl normal-case text-primary">Cars</a>
       </div>
       <div className="flex-none">
         <div className="dropdown-end dropdown">
