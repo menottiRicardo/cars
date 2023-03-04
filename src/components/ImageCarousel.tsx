@@ -4,53 +4,109 @@ import {
   MinusIcon,
 } from "@heroicons/react/24/outline";
 import React, { useState } from "react";
+import { useSwipeable } from "react-swipeable";
 
-const slides = ["/car-2.jpg", "/car-1.jpeg", "/car-3.jpg"];
+const slides = ["/car-2.jpg", "/car-1.jpg", "/car-3.jpg"];
 const ImageCarousel = () => {
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [state, dispatch] = React.useReducer(
+    reducer,
+    getInitialState(slides.length)
+  );
 
-  const prevSlide = () => {
-    const isFirstSlide = currentIndex === 0;
-    const newIndex = isFirstSlide ? slides.length - 1 : currentIndex - 1;
-    setCurrentIndex(newIndex);
+  const slide = (dir: Direction) => {
+    dispatch({ type: dir, numItems: slides.length });
+    setTimeout(() => {
+      dispatch({ type: "stopSliding" });
+    }, 50);
   };
 
-  const nextSlide = () => {
-    const isLastSlide = currentIndex === slides.length - 1;
-    const newIndex = isLastSlide ? 0 : currentIndex + 1;
-    setCurrentIndex(newIndex);
-  };
-
-  const goToSlide = (slideIndex: number) => {
-    setCurrentIndex(slideIndex);
-  };
+  const handlers = useSwipeable({
+    onSwipedLeft: () => slide("NEXT"),
+    onSwipedRight: () => slide("PREV"),
+    swipeDuration: 500,
+    preventScrollOnSwipe: true,
+    trackMouse: true,
+  });
   return (
-    <div className="group relative m-auto h-48 w-full max-w-[1400px]">
+    <div className="group relative h-48 w-full overflow-hidden" {...handlers}>
       <div
-        style={{ backgroundImage: `url(${slides[currentIndex]})` }}
-        className="h-full w-full rounded-t-xl bg-cover bg-center duration-100"
-      ></div>
+        className={`flex w-full ${
+          state.sliding ? "" : "1s transform transition ease-in-out"
+        } `}
+      >
+        {slides.map((slide, index) => (
+          <img
+            key={slide}
+            src={slide}
+            className="h-full w-full rounded-t-xl bg-cover bg-center duration-100"
+            style={{
+              order: `${getOrder(index, state.pos, slides.length)}`,
+            }}
+          />
+        ))}
+      </div>
+
       {/* Left Arrow */}
-      <div className="absolute top-[50%] left-5 hidden -translate-x-0 translate-y-[-50%] cursor-pointer rounded-full bg-black/20 p-2 text-2xl text-white group-hover:block">
-        <ChevronLeftIcon onClick={prevSlide} className="w-6" />
+      <div
+        className="absolute top-[50%] left-5 hidden -translate-x-0 translate-y-[-50%] cursor-pointer rounded-full bg-black/20 p-2 text-2xl text-white md:group-hover:block"
+        onClick={() => slide("PREV")}
+      >
+        <ChevronLeftIcon className="w-6" />
       </div>
       {/* Right Arrow */}
-      <div className="absolute top-[50%] right-5 hidden -translate-x-0 translate-y-[-50%] cursor-pointer rounded-full bg-black/20 p-2 text-2xl text-white group-hover:block">
-        <ChevronRightIcon onClick={nextSlide} className="w-6" />
-      </div>
-      <div className="top-4 flex justify-center py-2">
-        {slides.map((slide, slideIndex) => (
-          <div
-            key={slideIndex}
-            onClick={() => goToSlide(slideIndex)}
-            className="cursor-pointer text-2xl"
-          >
-            <MinusIcon />
-          </div>
-        ))}
+      <div
+        onClick={() => slide("NEXT")}
+        className="absolute top-[50%] right-5 hidden -translate-x-0 translate-y-[-50%] cursor-pointer rounded-full bg-black/20 p-2 text-2xl text-white md:group-hover:block"
+      >
+        <ChevronRightIcon className="w-6" />
       </div>
     </div>
   );
 };
 
+function reducer(state: CarouselState, action: CarouselAction): CarouselState {
+  switch (action.type) {
+    case "PREV":
+      return {
+        ...state,
+        dir: "PREV",
+        sliding: true,
+        pos: state.pos === 0 ? action.numItems - 1 : state.pos - 1,
+      };
+    case "NEXT":
+      return {
+        ...state,
+        dir: "NEXT",
+        sliding: true,
+        pos: state.pos === action.numItems - 1 ? 0 : state.pos + 1,
+      };
+    case "stopSliding":
+      return { ...state, sliding: false };
+    default:
+      return state;
+  }
+}
+
 export default ImageCarousel;
+
+type Direction = "PREV" | "NEXT";
+
+interface CarouselState {
+  pos: number;
+  sliding: boolean;
+  dir: Direction;
+}
+
+type CarouselAction =
+  | { type: Direction; numItems: number }
+  | { type: "stopSliding" };
+
+const getOrder = (index: number, pos: number, numItems: number) => {
+  return index - pos < 0 ? numItems - Math.abs(index - pos) : index - pos;
+};
+
+const getInitialState = (numItems: number): CarouselState => ({
+  pos: numItems - 1,
+  sliding: false,
+  dir: "NEXT",
+});
