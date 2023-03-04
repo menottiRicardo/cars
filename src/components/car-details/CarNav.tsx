@@ -1,12 +1,14 @@
 import { ArrowLeftIcon } from "@heroicons/react/24/outline";
+import { useRouter } from "next/router";
 import React from "react";
 
 const CarNav = () => {
+  const router = useRouter();
   return (
-    <div className="navbar sticky top-0 z-50 bg-base-100 shadow-2xl px-4">
+    <div className="navbar sticky top-0 z-50 bg-base-100 px-4 shadow-2xl">
       <div className="flex flex-1 justify-between">
         {/* left side */}
-        <div>
+        <div className="p-2" onClick={() => router.back()}>
           <ArrowLeftIcon className="w-6" />
         </div>
 

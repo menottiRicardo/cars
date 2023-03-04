@@ -9,7 +9,7 @@ const CarCard = () => {
       <div className="z-10 flex rounded-b-lg bg-base-100 p-2">
         <div className="flex w-full items-center justify-between">
           <div className="grid gap-y-2">
-            <span className="text-sm font-medium text-primary">
+            <span className="text-sm font-medium text-neutral">
               Honda, Civic
             </span>
 
