@@ -2,7 +2,7 @@ import { type NextPage } from "next";
 import Head from "next/head";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { api } from "~/utils/api";
-import CarCard from "~/components/CarCard";
+import CarCard from "~/components/home/CarCard";
 import NavBar from "~/components/NavBar";
 import BottomTabs from "~/components/BottomTabs";
 

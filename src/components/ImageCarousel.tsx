@@ -4,10 +4,7 @@ import { useSwipeable } from "react-swipeable";
 
 const slides = ["/car-2.jpg", "/car-1.jpg", "/car-3.jpg"];
 const ImageCarousel = () => {
-  const [state, dispatch] = useReducer(
-    reducer,
-    getInitialState(slides.length)
-  );
+  const [state, dispatch] = useReducer(reducer, getInitialState(slides.length));
 
   const slide = (dir: Direction) => {
     dispatch({ type: dir, numItems: slides.length });
@@ -60,15 +57,22 @@ const ImageCarousel = () => {
       </div>
       {/* Left Arrow */}
       <div
-        className="absolute top-[50%] left-5 hidden -translate-x-0 translate-y-[-50%] cursor-pointer rounded-full bg-black/20 p-2 text-2xl text-white md:group-hover:block"
-        onClick={() => slide("PREV")}
+        className="absolute top-[50%] left-5 block -translate-x-0 translate-y-[-50%] cursor-pointer rounded-full bg-black/20 p-2 text-2xl text-white"
+        onClick={(e) => {
+          e.stopPropagation();
+          console.log('hey')
+          slide("PREV");
+        }}
       >
         <ChevronLeftIcon className="w-6" />
       </div>
       {/* Right Arrow */}
       <div
-        onClick={() => slide("NEXT")}
-        className="absolute top-[50%] right-5 hidden -translate-x-0 translate-y-[-50%] cursor-pointer rounded-full bg-black/20 p-2 text-2xl text-white md:group-hover:block"
+        onClick={(e) => {
+          e.stopPropagation();
+          slide("NEXT");
+        }}
+        className="absolute top-[50%] right-5 block -translate-x-0 translate-y-[-50%] cursor-pointer rounded-full bg-black/20 p-2 text-2xl text-white"
       >
         <ChevronRightIcon className="w-6" />
       </div>
