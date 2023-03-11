@@ -6,7 +6,7 @@ import Pricing from "./pricing";
 const SelectPlan = ({ next }: { next: () => void }) => {
   const [selectedPlan, setSelectedPlan] = useAtom(selectedPlanAtom);
   return (
-    <div>
+    <div className="pb-4">
       {/* <h2 className="text-center text-lg font-bold text-base-content">
         Publica con nosotros en 4 sencillos pasos
       </h2> */}

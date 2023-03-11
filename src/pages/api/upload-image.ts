@@ -1,14 +1,17 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import cloudinary from "~/utils/cloudinary";
+import DatauriParser from "datauri/parser";
+import path from "path";
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const image = req.body;
-
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
+  const rawBody = req.body;
+  const body = JSON.parse(rawBody);
   // Upload
-  console.log('image', image)
 
-  const upload = await cloudinary.v2.uploader.upload(
-    "https://upload.wikimedia.org/wikipedia/commons/a/ae/Olympic_flag.jpg",
-    { public_id: "olympic_flag" }
-  );
+  const uploadedResponse = await cloudinary.v2.uploader.upload(body.image);
+
+  res.status(200).json(uploadedResponse);
 }
