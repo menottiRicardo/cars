@@ -8,15 +8,17 @@ interface Make {
   id: number;
   name: string;
 }
-const FillInfo = ({ next }: { next: () => void }) => {
+const FillInfo = ({ next, carId }: { next: () => void; carId: string }) => {
   const [selectedMake, setSelectedMake] = useState("");
   const [selectedModel, setSelectedModel] = useState("");
   const [selectedType, setSelectedType] = useState("");
+  const [selectedTraction, setSelectedTraction] = useState("");
   const [extraInfo, setExtraInfo] = useState({
-    year: 0,
+    year: '',
+    kms: '',
   });
   const { data: makes, isLoading } = api.car.getMakes.useQuery();
-
+  const updateCar = api.car.updateCar.useMutation();
   const getModels = () => {
     const make = makes?.find((make) => make.name === selectedMake);
     const models = make?.models;
@@ -24,13 +26,22 @@ const FillInfo = ({ next }: { next: () => void }) => {
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    //const name = e.target.name
-    //const value = e.target.value
     const { name, value } = e.target;
 
     setExtraInfo({
       ...extraInfo,
       [name]: value,
+    });
+  };
+
+  const submit = () => {
+    updateCar.mutateAsync({
+      id: carId,
+      make: selectedMake,
+      model: selectedModel,
+      traction: selectedTraction,
+      year: parseInt(extraInfo.year),
+      kms: parseInt(extraInfo.kms),
     });
   };
   return (
@@ -76,7 +87,18 @@ const FillInfo = ({ next }: { next: () => void }) => {
             />
           </div>
         )}
-        {selectedType !== "" && (
+        {selectedModel !== "" && (
+          <div>
+            <span className="text-base-content opacity-70">Tracion</span>
+            <DropdownInput
+              placeholder="Tipo"
+              values={["4x2", "4x4", "Hibrido", "Electrico"]}
+              selected={selectedTraction}
+              setSelected={setSelectedTraction}
+            />
+          </div>
+        )}
+        {selectedModel !== "" && (
           <div className="grid">
             <span className="text-base-content opacity-70">Ano</span>
             <input
@@ -88,8 +110,20 @@ const FillInfo = ({ next }: { next: () => void }) => {
             />
           </div>
         )}
+        {selectedModel !== "" && (
+          <div className="grid">
+            <span className="text-base-content opacity-70">Kilometraje</span>
+            <input
+              type="number"
+              name="kms"
+              placeholder="Kilometraje"
+              onChange={handleInputChange}
+              className="input-bordered input-primary input w-full border-2 outline-none focus:outline-none"
+            />
+          </div>
+        )}
       </div>
-      <button className="btn-primary btn mt-4 flex w-full items-center justify-center">
+      <button className="btn-primary btn mt-4 flex w-full items-center justify-center" onClick={submit}>
         Siguiente
       </button>
     </div>

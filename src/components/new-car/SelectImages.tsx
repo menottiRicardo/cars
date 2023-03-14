@@ -2,12 +2,13 @@ import { PlusCircleIcon } from "@heroicons/react/24/outline";
 import React, { useEffect, useState } from "react";
 import { api } from "~/utils/api";
 
-const SelectImages = ({ next }: { next: () => void }) => {
+const SelectImages = ({ next }: { next: (id: string) => void }) => {
   const [images, setImages] = useState<File[]>([]);
+  const [message, setMessage] = useState("Siguiente");
   const [imagesUrl, setImagesUrl] = useState<string[]>([]);
   const createCar = api.car.createCar.useMutation({
     onSuccess: (values) => {
-      next();
+      next(values.carId);
     },
   });
 
@@ -24,6 +25,10 @@ const SelectImages = ({ next }: { next: () => void }) => {
   }, [images]);
 
   const submit = async () => {
+    setMessage("Subiendo Imagenes...");
+    if (message !== "Siguiente") {
+      return;
+    }
     const imagesUploaded: string[] = [];
     const result = images.map(async (image) => {
       const result = await uploadImage(image);
@@ -83,7 +88,7 @@ const SelectImages = ({ next }: { next: () => void }) => {
             className="btn-primary btn mt-4 flex w-full items-center justify-center"
             onClick={submit}
           >
-            Siguiente
+            {message}
           </button>
         </div>
       )}

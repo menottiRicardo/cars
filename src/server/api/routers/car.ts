@@ -31,6 +31,36 @@ export const carRouter = createTRPCRouter({
         carId: newCar.id,
       };
     }),
+  updateCar: publicProcedure
+    .input(
+      z.object({
+        year: z.number(),
+        id: z.string(),
+        make: z.string(),
+        model: z.string(),
+        kms: z.number(),
+        traction: z.string(),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      const newCar = await ctx.prisma.car.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          year: input.year,
+          make: input.make,
+          model: input.model,
+          kms: input.kms,
+          traction: input.traction,
+          registryUri: "",
+        },
+      });
+
+      return {
+        carId: newCar.id,
+      };
+    }),
 
   getAll: publicProcedure.query(({ ctx }) => {
     return ctx.prisma.example.findMany();

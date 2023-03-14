@@ -7,7 +7,7 @@ import SelectImages from "~/components/new-car/SelectImages";
 import SelectPlan from "~/components/new-car/SelectPlan";
 
 const New: NextPage = () => {
-  const [step, setStep] = useState(2);
+  const [step, setStep] = useState(0);
   const [carId, setCarId] = useState("");
   const handleNext = (id?: string) => {
     setStep((step) => step + 1);
@@ -15,6 +15,7 @@ const New: NextPage = () => {
       setCarId(id);
     }
   };
+  console.log(carId)
   return (
     <>
       <Head>
@@ -49,7 +50,7 @@ const New: NextPage = () => {
         <div className="layout-1 mt-6">
           {step === 0 && <SelectPlan next={handleNext} />}
           {step === 1 && <SelectImages next={handleNext} />}
-          {step === 2 && <FillInfo next={handleNext} />}
+          {step === 2 && <FillInfo next={handleNext} carId={carId}/>}
         </div>
       </main>
       <BottomTabs />
