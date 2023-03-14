@@ -39,4 +39,12 @@ export const carRouter = createTRPCRouter({
   getSecretMessage: protectedProcedure.query(() => {
     return "you can now see this secret message!";
   }),
+
+  getMakes: publicProcedure.query(({ ctx }) => {
+    return ctx.prisma.make.findMany({
+      include: {
+        models: true,
+      },
+    });
+  }),
 });

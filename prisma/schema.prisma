@@ -72,10 +72,11 @@ model Car {
     year        Int
     make        String
     model       String
+    year        Number
     traction    String
     kms         Int
     appoinments Appointments[]
-    registryUri    String
+    registryUri String
 }
 
 model Images {
@@ -91,3 +92,15 @@ model Appointments {
     carId String?
 }
 
+model Make {
+    id     String  @id @default(cuid())
+    name   String
+    models Model[]
+}
+
+model Model {
+    id     String  @id @default(cuid())
+    name   String
+    Make   Make?   @relation(fields: [makeId], references: [id])
+    makeId String?
+}
