@@ -63,7 +63,7 @@ export const carRouter = createTRPCRouter({
     }),
 
   getAll: publicProcedure.query(({ ctx }) => {
-    return ctx.prisma.example.findMany();
+    return ctx.prisma.car.findMany();
   }),
 
   getSecretMessage: protectedProcedure.query(() => {
