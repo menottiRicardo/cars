@@ -14,8 +14,9 @@ const FillInfo = ({ next, carId }: { next: () => void; carId: string }) => {
   const [selectedType, setSelectedType] = useState("");
   const [selectedTraction, setSelectedTraction] = useState("");
   const [extraInfo, setExtraInfo] = useState({
-    year: '',
-    kms: '',
+    year: "",
+    kms: "",
+    price: "",
   });
   const { data: makes, isLoading } = api.car.getMakes.useQuery();
   const updateCar = api.car.updateCar.useMutation();
@@ -42,10 +43,11 @@ const FillInfo = ({ next, carId }: { next: () => void; carId: string }) => {
       traction: selectedTraction,
       year: parseInt(extraInfo.year),
       kms: parseInt(extraInfo.kms),
+      price: parseInt(extraInfo.price),
     });
   };
   return (
-    <div className="relative">
+    <div className="relative mb-24">
       <h2 className="mt-2 text-center text-xl font-bold">
         Ahora conozcamos tu vehiculo
       </h2>
@@ -122,8 +124,23 @@ const FillInfo = ({ next, carId }: { next: () => void; carId: string }) => {
             />
           </div>
         )}
+        {selectedModel !== "" && (
+          <div className="grid">
+            <span className="text-base-content opacity-70">Precio</span>
+            <input
+              type="number"
+              name="price"
+              placeholder="Precio"
+              onChange={handleInputChange}
+              className="input-bordered input-primary input w-full border-2 outline-none focus:outline-none"
+            />
+          </div>
+        )}
       </div>
-      <button className="btn-primary btn mt-4 flex w-full items-center justify-center" onClick={submit}>
+      <button
+        className="btn-primary btn mt-4 flex w-full items-center justify-center"
+        onClick={submit}
+      >
         Siguiente
       </button>
     </div>

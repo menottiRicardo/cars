@@ -23,6 +23,7 @@ export const carRouter = createTRPCRouter({
           model: "",
           traction: "",
           kms: 0,
+          price: 0,
           registryUri: "",
         },
       });
@@ -40,6 +41,7 @@ export const carRouter = createTRPCRouter({
         model: z.string(),
         kms: z.number(),
         traction: z.string(),
+        price: z.number(),
       })
     )
     .mutation(async ({ input, ctx }) => {
@@ -54,6 +56,7 @@ export const carRouter = createTRPCRouter({
           kms: input.kms,
           traction: input.traction,
           registryUri: "",
+          price: input.price,
         },
       });
 
@@ -63,7 +66,11 @@ export const carRouter = createTRPCRouter({
     }),
 
   getAll: publicProcedure.query(({ ctx }) => {
-    return ctx.prisma.car.findMany();
+    return ctx.prisma.car.findMany({
+      include: {
+        images: true,
+      },
+    });
   }),
 
   getSecretMessage: protectedProcedure.query(() => {

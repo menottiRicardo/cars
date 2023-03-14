@@ -1,13 +1,14 @@
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
+import { Images } from "@prisma/client";
 import { useReducer } from "react";
 import { useSwipeable } from "react-swipeable";
 
-const slides = ["/car-2.jpg", "/car-1.jpg", "/car-3.jpg"];
-const ImageCarousel = () => {
-  const [state, dispatch] = useReducer(reducer, getInitialState(slides.length));
+
+const ImageCarousel = ({ images }: { images: Images[] }) => {
+  const [state, dispatch] = useReducer(reducer, getInitialState(images.length));
 
   const slide = (dir: Direction) => {
-    dispatch({ type: dir, numItems: slides.length });
+    dispatch({ type: dir, numItems: images.length });
     setTimeout(() => {
       dispatch({ type: "stopSliding" });
     }, 50);
@@ -28,22 +29,23 @@ const ImageCarousel = () => {
           state.sliding ? "" : "1s transform transition ease-in-out"
         } `}
       >
-        {slides.map((slide, index) => (
-          <>
-            <img
-              key={slide}
-              src={slide}
-              className="h-full w-full rounded-t-xl bg-cover bg-center duration-100"
-              style={{
-                order: `${getOrder(index, state.pos, slides.length)}`,
-              }}
-            />
-          </>
-        ))}
+        {images &&
+          images.map((slide, index) => (
+            <>
+              <img
+                key={slide.id}
+                src={`https://res.cloudinary.com/dt4xiekfw/${slide.uri}`}
+                className="h-full w-full rounded-t-xl bg-cover bg-center duration-100"
+                style={{
+                  order: `${getOrder(index, state.pos, images.length)}`,
+                }}
+              />
+            </>
+          ))}
       </div>
       <div className="absolute inset-x-0 bottom-2 z-20 flex h-2 w-full items-center justify-center gap-x-2">
-        {slides.map((slide, index) => {
-          const order = getOrder(index, state.pos, slides.length);
+        {images.map((slide, index) => {
+          const order = getOrder(index, state.pos, images.length);
 
           return (
             <div
@@ -60,7 +62,7 @@ const ImageCarousel = () => {
         className="absolute top-[50%] left-5 block -translate-x-0 translate-y-[-50%] cursor-pointer rounded-full bg-black/20 p-2 text-2xl text-white"
         onClick={(e) => {
           e.stopPropagation();
-          console.log('hey')
+          console.log("hey");
           slide("PREV");
         }}
       >

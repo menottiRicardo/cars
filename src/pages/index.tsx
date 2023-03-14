@@ -7,8 +7,9 @@ import NavBar from "~/components/NavBar";
 import BottomTabs from "~/components/BottomTabs";
 
 const Home: NextPage = () => {
-  const hello = api.example.hello.useQuery({ text: "from tRPC" });
+  const { data: cars } = api.car.getAll.useQuery();
 
+  console.log(cars);
   return (
     <>
       <Head>
@@ -19,11 +20,16 @@ const Home: NextPage = () => {
       <NavBar />
       <div className="layout-1 min-h-screen bg-base-100 pb-20">
         <div className="mt-4 grid gap-y-4">
-          <CarCard />
-          <CarCard />
-
-          <CarCard />
-          <CarCard />
+          {cars &&
+            cars.map((car) => (
+              <CarCard
+                key={car.id}
+                year={car.year}
+                price={car.price}
+                kms={car.kms}
+                images={car.images}
+              />
+            ))}
         </div>
       </div>
       <BottomTabs />

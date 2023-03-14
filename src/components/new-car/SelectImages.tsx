@@ -27,9 +27,9 @@ const SelectImages = ({ next }: { next: (id: string) => void }) => {
 
   const submit = async () => {
     setMessage("Subiendo Imagenes...");
-    if (message === "Subiendo Imagenes...") {
-      return;
-    }
+    // if (message === "Subiendo Imagenes...") {
+    //   return;
+    // }
     const signResponse = await fetch("/api/upload-image");
     const signData = await signResponse.json();
     const imagesUploaded: string[] = [];

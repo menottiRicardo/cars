@@ -73,6 +73,7 @@ model Car {
     make        String
     model       String
     traction    String
+    price       Float
     kms         Int
     appoinments Appointments[]
     registryUri String
