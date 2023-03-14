@@ -26,9 +26,6 @@ const SelectImages = ({ next }: { next: (id: string) => void }) => {
 
   const submit = async () => {
     setMessage("Subiendo Imagenes...");
-    if (message !== "Siguiente") {
-      return;
-    }
     const imagesUploaded: string[] = [];
     const result = images.map(async (image) => {
       const result = await uploadImage(image);
