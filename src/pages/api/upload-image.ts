@@ -1,7 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import cloudinary from "~/utils/cloudinary";
-import DatauriParser from "datauri/parser";
-import path from "path";
 
 export default async function handler(
   req: NextApiRequest,

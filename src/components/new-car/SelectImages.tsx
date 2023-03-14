@@ -1,9 +1,16 @@
 import { PlusCircleIcon } from "@heroicons/react/24/outline";
 import React, { useEffect, useState } from "react";
+import { api } from "~/utils/api";
 
 const SelectImages = ({ next }: { next: () => void }) => {
   const [images, setImages] = useState<File[]>([]);
   const [imagesUrl, setImagesUrl] = useState<string[]>([]);
+  const createCar = api.car.createCar.useMutation({
+    onSuccess: (values) => {
+      next();
+    },
+  });
+
   const handleImageSelection = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files: any = e.target.files;
     setImages(images.concat([...files]));
@@ -17,12 +24,15 @@ const SelectImages = ({ next }: { next: () => void }) => {
   }, [images]);
 
   const submit = async () => {
-    const imagesUploaded = [];
-    images.forEach(async (image) => {
+    const imagesUploaded: string[] = [];
+    const result = images.map(async (image) => {
       const result = await uploadImage(image);
       imagesUploaded.push(result.public_id);
     });
-    next();
+    await Promise.all(result);
+
+    // create car
+    createCar.mutateAsync({ images: imagesUploaded });
   };
 
   const uploadImage = async (image: File) => {
@@ -38,7 +48,7 @@ const SelectImages = ({ next }: { next: () => void }) => {
   return (
     <div className="relative">
       <h2 className="mt-2 text-center text-xl font-bold">
-        Ahora seleciona los archivos que quieras anadir
+        Empecemos subiendo las imagenes
       </h2>
 
       {images.length > 0 && (
@@ -80,7 +90,7 @@ const SelectImages = ({ next }: { next: () => void }) => {
       {images.length === 0 && (
         <label htmlFor="upload">
           <div
-            className="mt-4 rounded-md bg-secondary px-3 py-2 text-center text-secondary-content shadow-md"
+            className="mt-4 rounded-md bg-primary px-3 py-2 text-center text-secondary-content shadow-md"
             aria-hidden="true"
           >
             Toca aqui para subir tus imagenes
