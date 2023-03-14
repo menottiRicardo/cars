@@ -5,11 +5,20 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const rawBody = req.body;
-  const body = JSON.parse(rawBody);
   // Upload
+  const timestamp = Math.round(new Date().getTime() / 1000);
+  const uploadedResponse = await cloudinary.v2.utils.api_sign_request(
+    {
+      timestamp,
+      eager: "c_pad,h_300,w_400|c_crop,h_200,w_260",
+    },
+    process.env.CLOUDINARY_API_SECRET as string
+  );
 
-  const uploadedResponse = await cloudinary.v2.uploader.upload(body.image);
-
-  res.status(200).json(uploadedResponse);
+  res.status(200).json({
+    timestamp,
+    signature: uploadedResponse,
+    cloudName: process.env.CLOUDINARY_NAME,
+    apiKey: process.env.CLOUDINARY_API_KEY,
+  });
 }

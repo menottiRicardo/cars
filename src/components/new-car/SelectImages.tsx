@@ -8,6 +8,7 @@ const SelectImages = ({ next }: { next: (id: string) => void }) => {
   const [imagesUrl, setImagesUrl] = useState<string[]>([]);
   const createCar = api.car.createCar.useMutation({
     onSuccess: (values) => {
+      setMessage("Listo!!");
       next(values.carId);
     },
   });
@@ -26,12 +27,14 @@ const SelectImages = ({ next }: { next: (id: string) => void }) => {
 
   const submit = async () => {
     setMessage("Subiendo Imagenes...");
-    if (message !== "Siguiente") {
-      return;
-    }
+    // if (message === "Subiendo Imagenes...") {
+    //   return;
+    // }
+    const signResponse = await fetch("/api/upload-image");
+    const signData = await signResponse.json();
     const imagesUploaded: string[] = [];
     const result = images.map(async (image) => {
-      const result = await uploadImage(image);
+      const result = await uploadImage(image, signData);
       imagesUploaded.push(result.public_id);
     });
     await Promise.all(result);
@@ -40,14 +43,28 @@ const SelectImages = ({ next }: { next: (id: string) => void }) => {
     createCar.mutateAsync({ images: imagesUploaded });
   };
 
-  const uploadImage = async (image: File) => {
+  const uploadImage = async (image: File, signData: any) => {
+    // sign the upload
+
     const base54 = await toBase64(image);
-    const res = await fetch("/api/upload-image", {
-      method: "POST",
-      body: JSON.stringify({ image: base54 }),
-    });
-    const result = await res.json();
-    return result;
+
+    const formData = new FormData();
+    formData.append("file", image);
+    formData.append("api_key", signData.apiKey);
+    formData.append("timestamp", signData.timestamp);
+    formData.append("signature", signData.signature);
+    formData.append("eager", "c_pad,h_300,w_400|c_crop,h_200,w_260");
+
+    const upload = await fetch(
+      `https://api.cloudinary.com/v1_1/${signData.cloudName}/auto/upload`,
+      {
+        method: "POST",
+        body: formData,
+      }
+    );
+    const uploadedResponse = await upload.json();
+
+    return uploadedResponse;
   };
 
   return (
@@ -64,7 +81,7 @@ const SelectImages = ({ next }: { next: (id: string) => void }) => {
                 <div className="absolute top-2 left-2 flex items-center justify-center rounded-full bg-secondary px-2 text-primary-content">
                   {index}
                 </div>
-                <img src={src} className="h-20 w-full rounded-md shadow-xl" />
+                <img src={src} className="h-28 w-full rounded-md shadow-xl" />
               </div>
             ))}
             <label htmlFor="upload">
@@ -113,10 +130,10 @@ const SelectImages = ({ next }: { next: (id: string) => void }) => {
   );
 };
 const toBase64 = (file: any) =>
-  new Promise((resolve, reject) => {
+  new Promise<string>((resolve, reject) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result);
+    reader.onload = () => resolve(reader.result as string);
     reader.onerror = (error) => reject(error);
   });
 export default SelectImages;

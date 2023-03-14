@@ -1,5 +1,4 @@
 import React, { Fragment, useState } from "react";
-import * as Select from "@radix-ui/react-select";
 import {
   CheckIcon,
   ChevronDownIcon,
